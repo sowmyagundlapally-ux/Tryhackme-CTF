@@ -1,1 +1,54 @@
+Once Attckbox is active, scan for the avaiable ports for the <Target IP address>
+Command 
+
+nmap -sC <Target IP>
+
+Explanation 
+-sC is the default script scan which provides information about the aviable ports
+
+Result 
+22/tcp open  ssh
+80/tcp open  http
+
+As we have active http on port 80, now lets check for the website by going to http://<IP address> on firefox browser
+Once the webpage is loaded check, if the webpage have any Upload pages, Login forms, Strange error messages. 
+As we dont see any information, lets check for the soruce code for Hints in HTML comments (view source 👀)
+
+Command 
+Right click >> View page source 
+
+In the source page, doens't give you any information. Now check for the directory information avaiable. 
+Use gobuster to get the directory bruteforce 
+
+Command 
+gobuster dir -u 10.49.183.42 -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+
+Explanation
+gobuster -The tool itself.A fast directory and file brute-forcing tool. Sends many HTTP requests automatically
+dir - Try to find directories and files on a web server.
+-u - The traget URL 
+-w - select the wordlist which have details of directory breuteforce preinstalled on kali
+
+What Gobuster Is Actually Doing
+- Behind the scenes, Gobuster is:
+- Taking each word from the wordlist
+- Appending it to the URL
+- Sending an HTTP request
+- Checking the response code
+
+Results 
+/uploads              (Status: 301) [Size: 314] [--> http://10.49.183.42/uploads/]
+/css                  (Status: 301) [Size: 310] [--> http://10.49.183.42/css/]
+/js                   (Status: 301) [Size: 309] [--> http://10.49.183.42/js/]
+/panel                (Status: 301) [Size: 312] [--> http://10.49.183.42/panel/]
+Progress: 87664 / 87665 (100.00%)
+
+Now use the directories listed to the URL as - http://<TargetIP>/uploads and so on 
+http://10.49.183.42/uploads/ - show the upload pages 
+http://10.49.183.42/panel/ - This shows the option to upload the files
+As we have an option gto upload files, let try to upload a malicious file and run the file to get the access. 
+Download the PHP files from Github. You can try using - https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php
+
+Once the PHP file is downloaded on the firefox browser, save the doc on the Desktop. 
+While trying to upload the PHP file, app throws an error. Lets try to rename the file as Shell.PHTML. This will helps in uploading the file 
 
