@@ -1,1 +1,38 @@
+Scan for the avaiable ports
+Command 
+nmap 10.49.146.239 -sC
+
+Explanation 
+-sC will provide the default script scan and give the open port information 
+
+Result 
+80/tcp open  http
+| http-robots.txt: 1 disallowed entry 
+|_/fuel/
+|_http-title: Welcome to FUEL CMS
+
+As we have active services on port 80, let check if we can access the website <http://Target IP>
+
+Once the page has been loaded we can see the app anem and its version. Now lets check, if there is any information avaiable on explaoit DB 
+
+Results 
+Date	D	A	V	Title	Type	Platform	Author
+2022-04-19				Fuel CMS 1.5.0 - Cross-Site Request Forgery (CSRF)	WebApps	PHP	Ali J
+2021-11-15				Fuel CMS 1.4.13 - 'col' Blind SQL Injection (Authenticated)	WebApps	PHP	Rahad Chowdhury
+2021-11-03				Fuel CMS 1.4.1 - Remote Code Execution (3)	WebApps	PHP	Padsala Trushal
+2021-01-28				Fuel CMS 1.4.1 - Remote Code Execution (2)	WebApps	PHP	Alexandre ZANNI
+2020-08-31				Fuel CMS 1.4.8 - 'fuel_replace_id' SQL Injection (Authenticated)	WebApps	PHP	c0mpu7er
+2020-08-11				Fuel CMS 1.4.7 - 'col' SQL Injection (Authenticated)	WebApps	PHP	Roel van Beurden
+2019-07-19				fuel CMS 1.4.1 - Remote Code Execution (1)	WebApps	Linux	0xd0ff9
+
+As the version is 1.4, lets consider the Remote code execution vulnerability and Fuel CMS 1.4.1 - Remote Code Execution (3). 
+Now download the exploit file which is 50477.py. 
+
+As per the details on exploit file, we see that the file is of python3. 
+Command 
+python3 <pythonfile> -u http://<Target IP>
+
+Make sure to be on the directory where the python file is saved. 
+
+
 
